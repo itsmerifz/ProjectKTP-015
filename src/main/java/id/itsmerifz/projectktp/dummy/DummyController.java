@@ -7,10 +7,13 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,15 +24,19 @@ public class DummyController {
   List<Dummy> data = new ArrayList<>();
 
   @RequestMapping("/read")
-  @ResponseBody
-  public List<Dummy> getDummy(){
+  public String getDummy(Model m){
     try{
       data = dummyCtrl.findDummyEntities();
+      
+      // data.get()
     }catch(Exception e){
 
     }
-    return data;
+    m.addAttribute("data", data);
+    // m.addAttribute("pic", );
+    return "dummy";
   }
+  
 
   @RequestMapping("/create")
   public String createDummy(){
@@ -51,5 +58,14 @@ public class DummyController {
 
     dummyCtrl.create(d);
     return "created";
+  } 
+
+  @RequestMapping(value = "/img", method = RequestMethod.GET ,produces = {
+    MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE
+  })
+  public ResponseEntity<byte[]> getImg(@RequestParam("id") int id) throws Exception {
+    Dummy d = dummyCtrl.findDummy(id);
+    byte[] img = d.getGambar();
+    return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(img);
   }
 }
