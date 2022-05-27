@@ -14,7 +14,7 @@
     <hr />
     <div class="container">
       <div>
-        <a href="/create" class="btn btn-success">Tambah</a>
+        <a href="/create" class="btn btn-info text-white fw-bold btn-lg">Tambah</a>
       </div>
       <br />
       <br />
@@ -27,8 +27,8 @@
             <th>Aksi</th>
           </tr>
         </thead>
-        <tbody th:each="data: ${data}">
-          <td th:text="${data.id}" th:id="${data.id}"></td>
+        <tbody th:each="data, index: ${data}">
+          <td th:text="${index.count}" th:id="${data.id}"></td>
           <td th:text="${#dates.format(data.tanggal, 'dd-MM-yyyy')}"></td>
           <td>
             <img th:src="@{${'/img?id='+ data.id}}" alt="poto" width="200">
@@ -41,9 +41,8 @@
     </div>
     <script>
       const hapusData = val => {
-        const id = val
-        if(confirm(`Yakin ingin menghapus data ${id}?`)){
-          location.href = `/delete/${id}`;
+        if(confirm(`Yakin ingin menghapus data ${val}?`)){
+          location.href = `/delete/${val}`;
         }
       }
     </script>

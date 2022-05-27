@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class DummyController {
 
   @PostMapping(value = "/newdata", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @ResponseBody
-  public String newDummyData(@RequestParam("gambar") MultipartFile f, HttpServletRequest r)
+  public String newDummyData(@RequestParam("gambar") MultipartFile f, HttpServletRequest r, HttpServletResponse res)
       throws ParseException, Exception {
     Dummy d = new Dummy();
 
@@ -49,6 +50,7 @@ public class DummyController {
     d.setGambar(img);
 
     dummyCtrl.create(d);
+    res.sendRedirect("/read");
     return "created";
   }
 
@@ -63,8 +65,9 @@ public class DummyController {
 
   @GetMapping("/delete/{id}")
   @ResponseBody
-  public String deleteDummy(@PathVariable("id") int id) throws Exception {
+  public String deleteDummy(@PathVariable("id") int id, HttpServletResponse res) throws Exception {
     dummyCtrl.destroy(id);
+    res.sendRedirect("/read");
     return "deleted";
   }
 
@@ -77,7 +80,7 @@ public class DummyController {
 
   @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @ResponseBody
-  public String updateDummyData(@RequestParam("gambar") MultipartFile f, HttpServletRequest r)
+  public String updateDummyData(@RequestParam("gambar") MultipartFile f, HttpServletRequest r, HttpServletResponse res)
       throws ParseException, Exception {
     Dummy d = new Dummy();
 
@@ -89,6 +92,7 @@ public class DummyController {
     d.setGambar(img);
 
     dummyCtrl.edit(d);
+    res.sendRedirect("/read");
     return "updated";
   }
 }
